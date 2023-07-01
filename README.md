@@ -9,3 +9,4 @@ in development
 * Firebase / Firestore
 
 # Next Steps
+* implement middleware to protect routes

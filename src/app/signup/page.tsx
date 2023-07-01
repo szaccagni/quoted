@@ -2,7 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from 'next/navigation'
-import signUp, { SignUpResponse } from "@/firebase/signup";
+import signUp, { SignUpResponse } from "@/firebase/auth/signup";
 
 export default function SignUp() {
     const [email, setEmail] = useState('')
