@@ -4,17 +4,27 @@ import Link from "next/link";
 import { useAuthContext } from "@/context/AuthContext";
 import AuthLayout from "@/components/AuthLayout";
 import NavBar from "@/components/NavBar";
+import NewQuote from "@/components/NewQuote";
 import QuotesFeed from "@/components/QuotesFeed";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const { user } = useAuthContext()
+  const [quoteCreate, setQuoteCreate] = useState(false);
+
+  useEffect(() => {
+    setQuoteCreate(false)
+  },[quoteCreate])
 
   return (
     <main>
       {user ? (
         <>
           <NavBar></NavBar>
-          <QuotesFeed></QuotesFeed>
+          <div className="mt-32">
+            <NewQuote onQuoteCreate={setQuoteCreate}></NewQuote>
+            <QuotesFeed quoteCreate={quoteCreate}></QuotesFeed>
+          </div>
         </>
       ) : (
         <AuthLayout>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useAuthContext } from "@/context/AuthContext";
-import { useState, useEffect, ChangeEvent, use } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { updateUser, uploadFile } from "@/firebase/firebase-auth";
 import Image from "next/image";
@@ -9,7 +9,7 @@ import Image from "next/image";
 export default function Profile() {
     const { user } = useAuthContext()
     const [name, setName] = useState('')
-    const [photoDate, setPhotoData] = useState(user?.photoURL || '/no-photo.png')
+    const [photoData, setPhotoData] = useState(user?.photoURL || '/no-photo.png')
     const [loading, setLoading] = useState(false)
     const router = useRouter()
 
@@ -56,7 +56,7 @@ export default function Profile() {
                     <div className="flex flex-col items-center">
                         <div className="relative">
                             <div className="truncate rounded-full opacity-75 w-52 h-52 relative">
-                                <Image src={photoDate} alt="profile-photo" fill className="object-cover"></Image>
+                                <Image src={photoData} alt="profile-photo" fill className="object-cover"></Image>
                             </div>
                             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                                 <form id="imageForm">

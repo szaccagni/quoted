@@ -7,7 +7,8 @@ import {
     doc, 
     setDoc, 
     getDocs, 
-    collection 
+    collection,
+    addDoc
 } from "firebase/firestore";
 
 const db: Firestore = getFirestore(firebase_app);
@@ -23,9 +24,9 @@ type Quote = {
     author: string;
     authorAvatar: string;
     dtCreated: Date;
-    id: string;
     quoteText: string;
     userId: string;
+    id?: string;
 };
 
 const quoteCollection = collection(db, "quotes")
@@ -42,12 +43,25 @@ async function getQuotes():Promise<Quote[]> {
             quoteText: doc.data().quoteText,
             userId: doc.data().userId, 
         }))
+        filteredData.sort((a, b) => b.dtCreated.getTime() - a.dtCreated.getTime());
+
         console.log('filteredData: ', filteredData)
         quotes = filteredData
     } catch (err) {
         console.log(err)
     }
     return quotes
+}
+
+const addQuote = async (quoteData: Quote) => {
+  try {
+    const res = await addDoc(quoteCollection, quoteData)
+    console.log('backend add quote res: ', res)
+    return res
+  } catch(err) {
+    console.log(err)
+  }
+  
 }
 
 async function addData(
@@ -71,4 +85,4 @@ async function addData(
 }
 
 export type { Quote };
-export { getQuotes }
+export { getQuotes, addQuote }
