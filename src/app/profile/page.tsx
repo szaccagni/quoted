@@ -10,9 +10,10 @@ export default function Profile() {
     const { user } = useAuthContext()
     const [name, setName] = useState('')
     const [photoDate, setPhotoData] = useState(user?.photoURL || '/no-photo.png')
-    const [photoUrl, setPhotoUrl] = useState('')
     const [loading, setLoading] = useState(false)
     const router = useRouter()
+
+    console.log('user id', user?.uid)
 
     useEffect(() => {
         if (user == null) router.push("/")

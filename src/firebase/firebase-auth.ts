@@ -69,7 +69,6 @@ async function uploadFile(file: Blob | Uint8Array, curUser: User, setLoading: Di
 }
 
 async function updateUser(displayName: string | null): Promise<UpdateResponse> {
-    const auth = getAuth(firebase_app);
     let result = null;
     let error = null;
 

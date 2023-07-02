@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useAuthContext } from "@/context/AuthContext";
 import AuthLayout from "@/components/AuthLayout";
 import NavBar from "@/components/NavBar";
+import QuotesFeed from "@/components/QuotesFeed";
 
 export default function Home() {
   const { user } = useAuthContext()
@@ -11,7 +12,10 @@ export default function Home() {
   return (
     <main>
       {user ? (
-        <NavBar></NavBar>
+        <>
+          <NavBar></NavBar>
+          <QuotesFeed></QuotesFeed>
+        </>
       ) : (
         <AuthLayout>
           <div>
