@@ -2,10 +2,13 @@ import Image from "next/image"
 import { useAuthContext } from "@/context/AuthContext";
 import { useState } from "react";
 import { logOut } from "@/firebase/auth/logout";
+import { useRouter } from "next/navigation";
+
 
 export default function NavBar() {
     const { user } = useAuthContext()
     const [toggle, setToggle] = useState(false)
+    const router = useRouter()
 
     const navClass = 'fixed backdrop-blur-sm bg-white/75 dark:bg-slate-900/75 z-50 top-0 left-0 right-0 border-b border-slate-300 shadow-sm'
     const buttonClass = 'inline-flex items-center text-sm text-gray-500 rounded-full border-2 p-1 border-transparent hover:border-gray-200'
@@ -27,7 +30,7 @@ export default function NavBar() {
                 </div>
             </div>
             <div className={toggle ? dropDownClass : 'hidden'}>
-                <button className={linkClass}>update profile</button>
+                <button className={linkClass} onClick={() => router.push('/profile')}>update profile</button>
                 <button className={linkClass} onClick={() => logOut()}>logout</button>
             </div>
         </div>
