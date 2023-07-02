@@ -2,7 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from 'next/navigation'
-import signIn, { SignInResponse } from "@/firebase/auth/signin";
+import { SignInResponse, signIn } from "@/firebase/firebase-auth";
 import AuthLayout from "@/components/AuthLayout";
 
 export default function SignIn() {
@@ -20,7 +20,6 @@ export default function SignIn() {
         }
 
         // else successful
-        console.log(result)
         return router.push("/")
     }
     return (

@@ -1,7 +1,7 @@
 import Image from "next/image"
 import { useAuthContext } from "@/context/AuthContext";
 import { useState } from "react";
-import { logOut } from "@/firebase/auth/logout";
+import { logOut } from "@/firebase/firebase-auth";
 import { useRouter } from "next/navigation";
 
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { logOut } from "@/firebase/auth/logout";
+import { logOut } from "@/firebase/firebase-auth";
 
 export default function LogoutBtn() {
     return (

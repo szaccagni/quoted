@@ -2,7 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from 'next/navigation'
-import signUp, { SignUpResponse } from "@/firebase/auth/signup";
+import { SignUpResponse, signUp } from "@/firebase/firebase-auth";
 import AuthLayout from "@/components/AuthLayout";
 
 export default function SignUp() {
@@ -20,7 +20,6 @@ export default function SignUp() {
         }
 
         // else successful
-        console.log(result)
         return router.push("/")
     }
 
