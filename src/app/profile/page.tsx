@@ -54,13 +54,13 @@ export default function Profile() {
                 <div>
                     <div className="flex flex-col items-center">
                         <div className="relative">
-                            <div className="truncate rounded-full opacity-75">
-                                <Image src={photoDate} alt="profile-photo" width={200} height={200}></Image>
+                            <div className="truncate rounded-full opacity-75 w-52 h-52 relative">
+                                <Image src={photoDate} alt="profile-photo" fill className="object-cover"></Image>
                             </div>
                             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                                 <form id="imageForm">
                                     <label htmlFor="imageInput" id="cameraIcon">
-                                        <Image src="/camera.png" alt="Camera Icon" width={50} height={50}></Image>
+                                        <Image src="/camera.png" alt="Camera Icon" width={50} height={50} ></Image>
                                     </label>
                                     <input onChange={(e) => handleImgInput(e)}type="file" accept="image/*" id="imageInput" className="hidden"></input>
                                 </form>
@@ -77,7 +77,7 @@ export default function Profile() {
                         </div>
                         <button 
                             onClick={handleClick}
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-14 rounded-full text-center inline-block md:w-1/2 w-auto"
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-14 rounded-full text-center inline-block  lg:w-1/4 md:w-1/2 w-auto"
                             disabled={loading}
                         >
                             confirm changes

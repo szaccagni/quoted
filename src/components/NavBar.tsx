@@ -23,8 +23,8 @@ export default function NavBar() {
                 </div>
                 <div className='flex items-center'>
                     <button onClick={() => setToggle(!toggle)} className={toggle ? `${buttonClass} border-gray-200` : `${buttonClass}`}>
-                        <div className="truncate rounded-full">
-                            <Image src={user?.photoURL || '/no-photo.png'} alt="profile-photo" width={70} height={70}></Image>
+                        <div className="truncate rounded-full w-20 h-20 relative">
+                            <Image src={user?.photoURL || '/no-photo.png'} alt="profile-photo" fill className="object-cover"></Image>
                         </div>
                     </button>
                 </div>
