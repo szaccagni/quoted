@@ -3,6 +3,7 @@
 import { useState, FormEvent } from "react";
 import { useRouter } from 'next/navigation'
 import signIn, { SignInResponse } from "@/firebase/auth/signin";
+import AuthLayout from "@/components/AuthLayout";
 
 export default function SignIn() {
     const [email, setEmail] = useState('')
@@ -20,22 +21,45 @@ export default function SignIn() {
 
         // else successful
         console.log(result)
-        return router.push("/admin")
+        return router.push("/")
     }
-    return (<div className="wrapper">
-        <div className="form-wrapper">
-            <h1 className="mt-60 mb-30">Sign in</h1>
-            <form onSubmit={handleForm} className="form">
-                <label htmlFor="email">
-                    <p>Email</p>
-                    <input onChange={(e) => setEmail(e.target.value)} required type="email" name="email" id="email" placeholder="example@mail.com" />
-                </label>
-                <label htmlFor="password">
-                    <p>Password</p>
-                    <input onChange={(e) => setPassword(e.target.value)} required type="password" name="password" id="password" placeholder="password" />
-                </label>
-                <button type="submit">Sign in</button>
-            </form>
-        </div>
-    </div>);
+    return (
+        <AuthLayout>
+            <div className="font-bold text-xl mb-3">Log into your account</div>
+            <div>
+                <form onSubmit={handleForm}>
+                    <div className="mb-4">
+                        <input
+                            onChange={(e) => setEmail(e.target.value)}
+                            type="email"
+                            id="email"
+                            name="email"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="Enter your email"
+                            required
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <input
+                            onChange={(e) => setPassword(e.target.value)}
+                            type="password"
+                            id="password"
+                            name="password"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="Password"
+                            required
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <button
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full text-center inline-block md:w-1/2 w-full"
+                            type="submit"
+                        >
+                            Log In
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </AuthLayout>
+    );
 }

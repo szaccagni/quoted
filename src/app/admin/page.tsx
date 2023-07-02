@@ -7,7 +7,6 @@ import updateUser from "@/firebase/auth/updateUser";
 export default function Admin() {
     const [name, setName] = useState('')
     const { user } = useAuthContext()
-    console.log('user', user)
     const router = useRouter()
 
     useEffect(() => {
