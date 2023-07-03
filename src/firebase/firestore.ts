@@ -1,5 +1,6 @@
 import firebase_app from "./config";
 import { getAuth, User } from "firebase/auth";
+import { getDownloadURL, getStorage, ref, StorageReference, uploadBytes } from "firebase/storage"
 import { 
     Firestore, 
     getFirestore, 
@@ -17,11 +18,17 @@ import {
 const db: Firestore = getFirestore(firebase_app);
 const auth = getAuth(firebase_app);
 const curUser: User | null = auth.currentUser;
+const storage = getStorage();
 
 interface AddDataResult {
   result: void; // The result of setDoc is void
   error: Error | null;
 } 
+
+interface ImgUploadResponse {
+  result: void | null;
+  error: any;
+}
 
 type Quote = {
     author: string | '';
@@ -48,7 +55,6 @@ async function getQuotes():Promise<Quote[]> {
         }))
         filteredData.sort((a, b) => b.dtCreated.getTime() - a.dtCreated.getTime());
 
-        console.log('filteredData: ', filteredData)
         quotes = filteredData
     } catch (err) {
         console.log(err)
@@ -59,7 +65,6 @@ async function getQuotes():Promise<Quote[]> {
 const addQuote = async (quoteData: Quote) => {
   try {
     const res = await addDoc(quoteCollection, quoteData)
-    console.log('backend add quote res: ', res)
     return res
   } catch(err) {
     console.log(err)
@@ -79,7 +84,6 @@ const getQuote = async(quoteId: string) => {
       quoteText: quoteDoc.data()?.quoteText,
       userId: quoteDoc.data()?.userId, 
     }
-    console.log('quoteDoc: ', quoteFormatted)
     return quoteFormatted
   } catch(err) {
     console.log('getQuote error: ', err)
@@ -100,5 +104,27 @@ const deleteQuote = async (quoteId: string) => {
   await deleteDoc(docRef);
 }
 
+const uploadAuthorImg = async (file: Blob | Uint8Array | File | '', fileName: string ) => {
+  if (file) {
+    const fileRef = ref(storage, fileName);
+    const upload = await uploadBytes(fileRef, file)
+  }
+}
+
+const getUrl = async (fileName: string) => {
+  const fileRef = ref(storage, fileName);
+  const photoURL = await getDownloadURL(fileRef);
+  return photoURL;
+}
+
+// async function uploadFile(file: Blob | Uint8Array, curUser: User, setLoading: Dispatch<SetStateAction<boolean>>) {
+//   const fileRef = ref(storage, curUser?.uid + '.png');
+//   uploadBytes(fileRef, file)
+//   .then((res) => {
+//       setLoading(false)
+//       return res
+//   });
+// }
+
 export type { Quote };
-export { getQuotes, addQuote, getQuote, updateQuote, deleteQuote }
+export { getQuotes, addQuote, getQuote, updateQuote, deleteQuote, uploadAuthorImg, getUrl }

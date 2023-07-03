@@ -1,18 +1,18 @@
 'use client'
 
 import { useAuthContext } from "@/context/AuthContext";
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import { getQuote, Quote, updateQuote, deleteQuote } from "@/firebase/firestore";
+import { getQuote, Quote, updateQuote, deleteQuote, uploadAuthorImg, getUrl } from "@/firebase/firestore";
 import Image from "next/image";
 
 export default function EditQuote() {
     const { user } = useAuthContext()
-
     const searchParams = useSearchParams()
     const quoteId = searchParams.get('quoteId')
-    const [photoData, setPhotoData] = useState('/no-photo.png')
+    const [photoData, setPhotoData] = useState('')
+    const [photoFile, setPhotoFile] = useState<File | undefined>(undefined);
     const [quoteData, setQuoteData] = useState<Quote>({
         author: '',
         authorAvatar: '',
@@ -27,7 +27,6 @@ export default function EditQuote() {
     async function loadQuote() {
         if (quoteId) {
             const quoteDoc = await getQuote(quoteId)
-            console.log('front end quoteDoc: ', quoteDoc)
             setQuoteData({
                 author: quoteDoc?.author,
                 authorAvatar: quoteDoc?.authorAvatar,
@@ -49,8 +48,19 @@ export default function EditQuote() {
     }, [])
 
     async function handleUpdate() {
+        let photoUrl = await getUrl(photoFile?.name || '')
+        let quoteDataToUpdate = {}
+        if (photoUrl) {
+            quoteDataToUpdate = {
+                ...quoteData,
+                authorAvatar: photoUrl
+            }
+        } else {
+            quoteDataToUpdate = quoteData
+        }
+        
         if (quoteId) {
-            await updateQuote(quoteId, quoteData)
+            await updateQuote(quoteId, quoteDataToUpdate)
             router.push('/')
         }
     }
@@ -59,6 +69,27 @@ export default function EditQuote() {
         if (quoteId) {
             await deleteQuote(quoteId)
             router.push('/')
+        }
+    }
+
+    const handleImgInput = async (e: ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files
+        if (files && files.length > 0 && user) {
+            // display preview on screen
+            const selectedFile = files[0];
+            setPhotoFile(selectedFile)
+            const reader = new FileReader();
+        
+            reader.onload = () => {
+              if (reader.readyState === 2) {
+                setPhotoData(reader.result as string);
+              }
+            };
+            reader.readAsDataURL(selectedFile);
+
+            await uploadAuthorImg(selectedFile, selectedFile?.name)
+        } else {
+            setLoading(false)
         }
     }
 
@@ -76,14 +107,14 @@ export default function EditQuote() {
                             <div className="flex flex-col items-center">
                                 <div className="relative">
                                     <div className="truncate rounded-full opacity-75 w-52 h-52 relative">
-                                        <Image src={photoData} alt="profile-photo" fill className="object-cover"></Image>
+                                        <Image src={photoData || quoteData.authorAvatar || '/no-photo.png'} alt="profile-photo" fill className="object-cover"></Image>
                                     </div>
                                     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                                         <form id="imageForm">
                                             <label htmlFor="imageInput" id="cameraIcon">
                                                 <Image src="/camera.png" alt="Camera Icon" width={50} height={50} ></Image>
                                             </label>
-                                            {/* <input onChange={(e) => handleImgInput(e)}type="file" accept="image/*" id="imageInput" className="hidden"></input> */}
+                                            <input onChange={(e) => handleImgInput(e)}type="file" accept="image/*" id="imageInput" className="hidden"></input>
                                         </form>
                                     </div>
                                 </div>

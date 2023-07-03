@@ -13,8 +13,6 @@ export default function Profile() {
     const [loading, setLoading] = useState(false)
     const router = useRouter()
 
-    console.log('user id', user?.uid)
-
     useEffect(() => {
         if (user == null) router.push("/")
     })

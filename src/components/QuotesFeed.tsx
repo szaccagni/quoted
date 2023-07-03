@@ -12,7 +12,6 @@ export default function QuotesFeed({ quoteCreate }: QuotesFeedProps) {
     const loadQuotes = async () => {
         const response = await getQuotes()
         setQuotes(response)
-        console.log('front end res: ', response )
     }
 
     useEffect(() => {

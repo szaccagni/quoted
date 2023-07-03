@@ -3,7 +3,7 @@
 import Image from "next/image"
 import { useState, ChangeEvent, Dispatch, SetStateAction } from "react"
 import { useAuthContext } from "@/context/AuthContext"
-import { Quote, addQuote } from "@/firebase/firestore"
+import { Quote, addQuote, uploadAuthorImg, getUrl } from "@/firebase/firestore"
 
 interface NewQuoteProps {
     onQuoteCreate: Dispatch<SetStateAction<boolean>>;
@@ -12,6 +12,7 @@ interface NewQuoteProps {
 export default function NewQuote( { onQuoteCreate }: NewQuoteProps) {
     const { user } = useAuthContext()
     const [photoData, setPhotoData] = useState('/no-photo.png')
+    const [photoFile, setPhotoFile] = useState<File | undefined>(undefined);
     const [author, setAuthor] = useState('')
     const [quoteText, setQuoteText] = useState('')
     const [loading, setLoading] = useState(false)
@@ -22,6 +23,7 @@ export default function NewQuote( { onQuoteCreate }: NewQuoteProps) {
         if (files && files.length > 0 && user) {
             // display preview on screen
             const selectedFile = files[0];
+            setPhotoFile(selectedFile)
             const reader = new FileReader();
         
             reader.onload = () => {
@@ -31,17 +33,17 @@ export default function NewQuote( { onQuoteCreate }: NewQuoteProps) {
             };
             reader.readAsDataURL(selectedFile);
 
-            // upload image to storage 
-            // await uploadFile(selectedFile, user, setLoading)
+            await uploadAuthorImg(selectedFile, selectedFile?.name)
         } else {
             setLoading(false)
         }
     }
 
     const createQuote = async () => {
+        let photoUrl = await getUrl(photoFile?.name || '')
         const newQuote: Quote = {
             author,
-            authorAvatar: '',
+            authorAvatar: photoUrl,
             dtCreated: new Date(),
             quoteText,
             userId: (user?.uid || '')
@@ -49,8 +51,9 @@ export default function NewQuote( { onQuoteCreate }: NewQuoteProps) {
         const res = await addQuote(newQuote)
         setAuthor('')
         setQuoteText('')
+        setPhotoData('/no-photo.png')
+        setPhotoFile(undefined)
         onQuoteCreate(true)
-        console.log('front end add quote res: ', res)
     }
 
     return (
