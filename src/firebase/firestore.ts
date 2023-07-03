@@ -8,7 +8,10 @@ import {
     setDoc, 
     getDocs, 
     collection,
-    addDoc
+    addDoc,
+    getDoc,
+    updateDoc,
+    deleteDoc
 } from "firebase/firestore";
 
 const db: Firestore = getFirestore(firebase_app);
@@ -21,12 +24,12 @@ interface AddDataResult {
 } 
 
 type Quote = {
-    author: string;
-    authorAvatar: string;
-    dtCreated: Date;
-    quoteText: string;
-    userId: string;
-    id?: string;
+    author: string | '';
+    authorAvatar: string | '';
+    dtCreated: Date | '';
+    quoteText: string | '';
+    userId: string | '';
+    id?: string | '';
 };
 
 const quoteCollection = collection(db, "quotes")
@@ -64,25 +67,38 @@ const addQuote = async (quoteData: Quote) => {
   
 }
 
-async function addData(
-  collection: string,
-  id: string,
-  data: any // Adjust the type of `data` to match the expected data type in Firestore
-): Promise<AddDataResult> {
-  let result: void | undefined = undefined;
-  let error: Error | null = null;
-
+const getQuote = async(quoteId: string) => {
+  const docRef = doc(db, 'quotes', quoteId)
   try {
-    const documentRef: DocumentReference = doc(db, collection, id);
-    result = await setDoc(documentRef, data, {
-      merge: true,
-    });
-  } catch (e) {
-    error = e as Error;
+    const quoteDoc = await getDoc(docRef)  
+    const quoteFormatted = {
+      author: quoteDoc.data()?.author,
+      authorAvatar: quoteDoc.data()?.authorAvatar,
+      dtCreated: quoteDoc.data()?.dtCreated.toDate(),
+      id: quoteDoc.id,
+      quoteText: quoteDoc.data()?.quoteText,
+      userId: quoteDoc.data()?.userId, 
+    }
+    console.log('quoteDoc: ', quoteFormatted)
+    return quoteFormatted
+  } catch(err) {
+    console.log('getQuote error: ', err)
   }
+}
 
-  return { result, error };
+const updateQuote = async(quoteId: string, updatedQuote: object) => {
+  const docRef = doc(db, 'quotes', quoteId)
+  try {
+    await updateDoc(docRef, updatedQuote)
+  } catch(err) {
+    console.log('updateQuote error: ', err)
+  }
+}
+
+const deleteQuote = async (quoteId: string) => {
+  const docRef = doc(db, 'quotes', quoteId)
+  await deleteDoc(docRef);
 }
 
 export type { Quote };
-export { getQuotes, addQuote }
+export { getQuotes, addQuote, getQuote, updateQuote, deleteQuote }
