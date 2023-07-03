@@ -9,6 +9,7 @@ import Image from "next/image";
 
 export default function EditQuote() {
     const { user } = useAuthContext()
+
     const searchParams = useSearchParams()
     const quoteId = searchParams.get('quoteId')
     const [photoData, setPhotoData] = useState('/no-photo.png')
