@@ -40,7 +40,8 @@ export default function NewQuote( { onQuoteCreate }: NewQuoteProps) {
     }
 
     const createQuote = async () => {
-        let photoUrl = await getUrl(photoFile?.name || '')
+        let photoUrl = ''
+        if (photoFile) photoUrl = await getUrl(photoFile?.name || '')
         const newQuote: Quote = {
             author,
             authorAvatar: photoUrl,

@@ -48,7 +48,8 @@ export default function EditQuote() {
     }, [])
 
     async function handleUpdate() {
-        let photoUrl = await getUrl(photoFile?.name || '')
+        let photoUrl = ''
+        if (photoFile) photoUrl = await getUrl(photoFile?.name || '')
         let quoteDataToUpdate = {}
         if (photoUrl) {
             quoteDataToUpdate = {
@@ -121,7 +122,7 @@ export default function EditQuote() {
                                 <div className="mt-7 mb-7 w-4/5">
                                     <div>
                                         <input
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                             onChange={(e) =>
                                                 setQuoteData(() => ({
                                                     ...quoteData,
@@ -135,7 +136,7 @@ export default function EditQuote() {
                                 <div className="mb-7 w-4/5">
                                     <div>
                                         <textarea
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                             onChange={(e) =>
                                                 setQuoteData(() => ({
                                                     ...quoteData,
