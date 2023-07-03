@@ -19,7 +19,6 @@ export default function SignUp() {
         if (error) {
             const cleanError = error.message.replace(/^Firebase: /, '')
             setError(cleanError)
-            return console.log('sign up err: ',error)
         }
 
         // else successful

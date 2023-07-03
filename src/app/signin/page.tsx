@@ -8,6 +8,7 @@ import AuthLayout from "@/components/AuthLayout";
 export default function SignIn() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [error, setError] = useState('')
     const router = useRouter()
 
     const handleForm = async (event: FormEvent<HTMLFormElement>) => {
@@ -16,7 +17,8 @@ export default function SignIn() {
         const { result, error }: SignInResponse = await signIn(email, password);
 
         if (error) {
-            return console.log(error)
+            const cleanError = error.message.replace(/^Firebase: /, '')
+            setError(cleanError)
         }
 
         // else successful
@@ -48,6 +50,9 @@ export default function SignIn() {
                             placeholder="Password"
                             required
                         />
+                    </div>
+                    <div className="text-center text-red-600 mb-2">
+                        {error}
                     </div>
                     <div className="mb-4">
                         <button
