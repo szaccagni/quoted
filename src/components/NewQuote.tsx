@@ -15,6 +15,7 @@ export default function NewQuote( { onQuoteCreate }: NewQuoteProps) {
     const [photoFile, setPhotoFile] = useState<File | undefined>(undefined);
     const [author, setAuthor] = useState('')
     const [quoteText, setQuoteText] = useState('')
+    const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
 
     const handleImgInput = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +41,12 @@ export default function NewQuote( { onQuoteCreate }: NewQuoteProps) {
     }
 
     const createQuote = async () => {
+        if (!author || !quoteText) {
+            setError('please enter the author and quote')
+            return
+        } else {
+            setError('')
+        }
         let photoUrl = ''
         if (photoFile) photoUrl = await getUrl(photoFile?.name || '')
         const newQuote: Quote = {
@@ -93,6 +100,9 @@ export default function NewQuote( { onQuoteCreate }: NewQuoteProps) {
                             </div>
                         </div>
                     </div>
+                </div>
+                <div className="text-center text-red-600">
+                    {error}
                 </div>
                 <div className="flex justify-center">
                     <button
